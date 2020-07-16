@@ -6,11 +6,13 @@ using System.Threading.Tasks;
 using Lacuca.Service.Authentication;
 using Lacuca.Service.DataBase.Context;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -34,11 +36,22 @@ namespace Lacuca.Service
     {
       services.AddControllers();
       services.AddDbContext<LacucaContext>(l => l.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
-      
+      services.AddMvc(config=>{
+        AuthorizationPolicy policy = new AuthorizationPolicyBuilder()
+          .RequireAuthenticatedUser()
+          .Build();
+        config.Filters.Add(new AuthorizeFilter(policy));
+      }).SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+
       // For Identity
       services.AddIdentity<ApplicationUser, IdentityRole>()
           .AddEntityFrameworkStores<LacucaContext>()
           .AddDefaultTokenProviders();
+
+      services.AddAuthorization(options => {
+        options.AddPolicy("user", policy => policy.RequireClaim("Store","user"));
+        options.AddPolicy("admin", policy => policy.RequireClaim("Store", "admin"));
+      });
 
       // Adding Authentication
       services.AddAuthentication(options =>
@@ -47,7 +60,6 @@ namespace Lacuca.Service
         options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
         options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
       })
-
       // Adding Jwt Bearer
       .AddJwtBearer(options =>
       {

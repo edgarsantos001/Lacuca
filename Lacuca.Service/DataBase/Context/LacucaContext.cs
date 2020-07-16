@@ -22,15 +22,9 @@ namespace Lacuca.Service.DataBase.Context
     public DbSet<CondominioModel> Condominio { get; set; }
     protected override void OnModelCreating(ModelBuilder construtorDeModelos)
     {
-      
-      construtorDeModelos.HasDefaultSchema("lacuca");
-      construtorDeModelos.Entity<IdentityRole<string>>().HasKey(r=>r.Id);
-      construtorDeModelos.Entity<IdentityUserToken<string>>().HasKey(r => r.UserId);
-      construtorDeModelos.Entity<IdentityUserClaim<string>>().HasKey(r => r.Id);
-      construtorDeModelos.Entity<IdentityUserLogin<string>>().HasKey(r => r.UserId);
-      construtorDeModelos.Entity<IdentityRoleClaim<string>>().HasKey(r => r.Id);
-      construtorDeModelos.Entity<IdentityUserRole<string>>().HasKey(r => r.RoleId);
+      base.OnModelCreating(construtorDeModelos);
 
+      construtorDeModelos.HasDefaultSchema("lacuca");
       ConfiguraUsuario(construtorDeModelos);
       ConfiguraPedido(construtorDeModelos);
       ConfiguraCategoria(construtorDeModelos);
@@ -40,6 +34,8 @@ namespace Lacuca.Service.DataBase.Context
       ConfiguraControle(construtorDeModelos);
       ConfiguraProduto(construtorDeModelos);
       ConfiguraTipoUsuario(construtorDeModelos);
+
+      
     }
 
     private void ConfiguraUsuario(ModelBuilder construtorDeModelos)

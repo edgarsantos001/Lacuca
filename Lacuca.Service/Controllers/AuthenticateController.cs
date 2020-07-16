@@ -14,6 +14,7 @@ using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Lacuca.Service.DataBase.Model;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Lacuca.Service.Controllers
 {
@@ -34,6 +35,7 @@ namespace Lacuca.Service.Controllers
 
     [HttpPost]
     [Route("login")]
+    [AllowAnonymous]
     public async Task<IActionResult> Login([FromBody] LoginModel model)
     {
       var user = await userManager.FindByNameAsync(model.Username);
