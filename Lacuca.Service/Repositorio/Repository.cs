@@ -14,9 +14,9 @@ namespace Lacuca.Service.Repositorio
   public class Repository<T> : IRepository<T>, IDisposable where T : class
   {
     private LacucaContext _context;
-    public Repository(LacucaContext context)
+    public Repository()
     {
-      this._context = context;
+      this._context = new LacucaContext();
     }
 
     public IQueryable<T> GetAll()

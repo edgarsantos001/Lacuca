@@ -3,6 +3,7 @@ using Lacuca.Service.DataBase.Model;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,23 @@ namespace Lacuca.Service.DataBase.Context
 {
   public class LacucaContext : IdentityDbContext<ApplicationUser> //DbContext
   {
+    
+
+    public LacucaContext(){}
+
+    protected override void OnConfiguring(DbContextOptionsBuilder dbContextOptionsBuilder) 
+    {
+
+      if (!dbContextOptionsBuilder.IsConfigured)
+      {
+        IConfigurationRoot configuration = new ConfigurationBuilder()
+              .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
+              .AddJsonFile("appsettings.json")
+              .Build();
+        dbContextOptionsBuilder.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
+      }
+    }
+
     public LacucaContext(DbContextOptions<LacucaContext> options) : base(options)
     { }
 
