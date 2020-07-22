@@ -5,8 +5,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="DataBase_Old\**" />
+    <Content Remove="DataBase_Old\**" />
+    <EmbeddedResource Remove="DataBase_Old\**" />
+    <None Remove="DataBase_Old\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="bower" Version="1.3.11" />
     <PackageReference Include="knockoutjs" Version="3.5.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.5" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.5" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.5">

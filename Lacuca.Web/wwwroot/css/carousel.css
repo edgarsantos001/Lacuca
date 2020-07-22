@@ -14,17 +14,17 @@
 
 /* Carousel base class */
 .carousel {
-  margin-bottom: 4rem;
+  margin-bottom: 3rem;
 }
 /* Since positioning the image, we need to help out the caption */
 .carousel-caption {
-  bottom: 3rem;
+  bottom: 2rem;
   z-index: 10;
 }
 
 /* Declare heights because of positioning of img element */
 .carousel-item {
-  height: 20rem;
+  height: 10rem;
   background-color: #777;
 }
 .carousel-item > img {
@@ -84,8 +84,22 @@
   }
 }
 
+@media (min-height: 40em) {
+  /* Bump up size of carousel content */
+  .carousel-caption  {
+    /*margin-bottom: 1.25rem;
+    font-size: 1.25rem;
+    line-height: 1.4;*/
+  }
+
+  .featurette-heading {
+    font-size: 50px;
+  }
+}
+
 @media (min-width: 62em) {
   .featurette-heading {
     margin-top: 7rem;
   }
+
 }

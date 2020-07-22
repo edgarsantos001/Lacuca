@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using Lacuca.Service.Authentication;
@@ -9,6 +10,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -36,6 +38,7 @@ namespace Lacuca.Service
     {
       services.AddControllers();
       services.AddDbContext<LacucaContext>(l => l.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
+      
       services.AddMvc(config=>{
         AuthorizationPolicy policy = new AuthorizationPolicyBuilder()
           .RequireAuthenticatedUser()
@@ -79,6 +82,12 @@ namespace Lacuca.Service
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
+      using (var servicescope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+      {
+        var context = servicescope.ServiceProvider.GetRequiredService<LacucaContext>();
+        context.Database.Migrate();
+      }
+
       if (env.IsDevelopment())
       {
         app.UseDeveloperExceptionPage();

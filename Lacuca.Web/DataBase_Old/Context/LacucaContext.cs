@@ -1,8 +1,4 @@
-﻿
-using Lacuca.Web.Authentication;
-using Lacuca.Web.DataBase.Model;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Lacuca.Condominios.DataBase.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -10,17 +6,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Lacuca.Web.DataBase.Context
+namespace Lacuca.Condominios.DataBase.Context
 {
-  public class LacucaContext : IdentityDbContext<ApplicationUser> 
+  public class LacucaContext : DbContext
   {
-
-    public LacucaContext(){}
-
     public LacucaContext(DbContextOptions<LacucaContext> options) : base(options)
-    {  }
+    { }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder dbContextOptionsBuilder) 
+    public DbSet<UsuarioModel> Usuario { get; set; }
+    public DbSet<PedidoModel> Pedido { get; set; }
+    public DbSet<ProdutoModel> Produto { get; set; }
+    public DbSet<CategoriaProdutoModel> CategoriaProduto { get; set; }
+    public DbSet<CondominioModel> Condominio { get; set; }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder dbContextOptionsBuilder)
     {
 
       if (!dbContextOptionsBuilder.IsConfigured)
@@ -33,16 +32,10 @@ namespace Lacuca.Web.DataBase.Context
       }
     }
 
-    public DbSet<UsuarioModel> Usuario { get; set; }
-    public DbSet<PedidoModel> Pedido { get; set; }
-    public DbSet<ProdutoModel> Produto { get; set; }
-    public DbSet<CategoriaProdutoModel> CategoriaProduto { get; set; }
-    public DbSet<CondominioModel> Condominio { get; set; }
     protected override void OnModelCreating(ModelBuilder construtorDeModelos)
     {
-      base.OnModelCreating(construtorDeModelos);
-
       construtorDeModelos.HasDefaultSchema("lacuca");
+
       ConfiguraUsuario(construtorDeModelos);
       ConfiguraPedido(construtorDeModelos);
       ConfiguraCategoria(construtorDeModelos);
@@ -52,8 +45,6 @@ namespace Lacuca.Web.DataBase.Context
       ConfiguraControle(construtorDeModelos);
       ConfiguraProduto(construtorDeModelos);
       ConfiguraTipoUsuario(construtorDeModelos);
-
-      
     }
 
     private void ConfiguraUsuario(ModelBuilder construtorDeModelos)

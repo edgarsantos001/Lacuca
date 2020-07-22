@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Lacuca.Web.DataBase.Model
+namespace Lacuca.Condominios.DataBase.Model
 {
   public class ProdutoModel
   {

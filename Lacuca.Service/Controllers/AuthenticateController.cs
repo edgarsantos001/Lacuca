@@ -15,15 +15,18 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Lacuca.Service.DataBase.Model;
 using Microsoft.AspNetCore.Authorization;
+using Lacuca.Service.Business;
 
 namespace Lacuca.Service.Controllers
 {
   [Route("api/[controller]")]
   [ApiController]
+  [AllowAnonymous]
   public class AuthenticateController : ControllerBase
   {
     private readonly UserManager<ApplicationUser> userManager;
     private readonly RoleManager<IdentityRole> roleManager;
+  //  private readonly UsuarioBusiness _usuarioBusiness;
     private readonly IConfiguration _configuration;
 
     public AuthenticateController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration)
@@ -75,10 +78,12 @@ namespace Lacuca.Service.Controllers
 
     [HttpPost]
     [Route("register")]
+    [AllowAnonymous]
     public async Task<IActionResult> Register([FromBody] UsuarioModel model)
     {
+      UsuarioBusiness usuarioBusiness = new UsuarioBusiness();
       var userExists = await userManager.FindByNameAsync(model.NM_USUARIO);
-      if (userExists != null)
+      if (userExists != null)  
         return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User already exists!" });
 
       ApplicationUser user = new ApplicationUser()
@@ -87,7 +92,10 @@ namespace Lacuca.Service.Controllers
         SecurityStamp = Guid.NewGuid().ToString(),
         UserName = model.NM_USUARIO
       };
+      
+      usuarioBusiness.InsertUser(model);
       var result = await userManager.CreateAsync(user, model.SENHA_USUARIO);
+      
       if (!result.Succeeded)
         return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User creation failed! Please check user details and try again." });
 

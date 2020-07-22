@@ -17,6 +17,10 @@ namespace Lacuca.Service.DataBase.Context
 
     public LacucaContext(){}
 
+
+    public LacucaContext(DbContextOptions<LacucaContext> options) : base(options)
+    {  }
+
     protected override void OnConfiguring(DbContextOptionsBuilder dbContextOptionsBuilder) 
     {
 
@@ -30,8 +34,6 @@ namespace Lacuca.Service.DataBase.Context
       }
     }
 
-    public LacucaContext(DbContextOptions<LacucaContext> options) : base(options)
-    { }
 
     public DbSet<UsuarioModel> Usuario { get; set; }
     public DbSet<PedidoModel> Pedido { get; set; }
